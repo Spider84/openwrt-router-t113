@@ -38,10 +38,9 @@ diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
 index 9c12c4a6573076..9d2898b3673750 100644
 --- a/drivers/net/pse-pd/Makefile
 +++ b/drivers/net/pse-pd/Makefile
-@@ -5,3 +5,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
+@@ -5,2 +5,3 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
  
  obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
- obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
 +obj-$(CONFIG_PSE_TPS23881) += tps23881.o
 diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
 new file mode 100644
