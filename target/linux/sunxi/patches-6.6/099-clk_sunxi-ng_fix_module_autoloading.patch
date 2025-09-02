@@ -1,0 +1,316 @@
+From c60f68047e1996bc1b2fb386d3b383aab8900c1b Mon Sep 17 00:00:00 2001
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Date: Wed, 10 Apr 2024 17:54:20 +0200
+Subject: [PATCH] clk: sunxi-ng: fix module autoloading
+
+Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
+based on the alias from of_device_id table.  Clocks are considered core
+components, so usually they are built-in, however these can be built and
+used as modules on some generic kernel.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Link: https://lore.kernel.org/r/20240410155420.224157-1-krzk@kernel.org
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+---
+ drivers/clk/sunxi-ng/ccu-sun20i-d1-r.c   | 1 +
+ drivers/clk/sunxi-ng/ccu-sun20i-d1.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c | 1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100.c   | 1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c    | 1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c   | 1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h616.c   | 1 +
+ drivers/clk/sunxi-ng/ccu-sun6i-a31.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun6i-rtc.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c    | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c      | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c       | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c  | 1 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c | 1 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c     | 1 +
+ drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c | 1 +
+ 23 files changed, 23 insertions(+)
+
+diff --git a/drivers/clk/sunxi-ng/ccu-sun20i-d1-r.c b/drivers/clk/sunxi-ng/ccu-sun20i-d1-r.c
+index 9d3ffd3fb2c145..0736f6c81269be 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun20i-d1-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun20i-d1-r.c
+@@ -125,6 +125,7 @@ static const struct of_device_id sun20i_d1_r_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun20i-d1-r-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun20i_d1_r_ccu_ids);
+ 
+ static struct platform_driver sun20i_d1_r_ccu_driver = {
+ 	.probe	= sun20i_d1_r_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun20i-d1.c b/drivers/clk/sunxi-ng/ccu-sun20i-d1.c
+index 48a8fb2c43b746..60756aadfad6a7 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun20i-d1.c
++++ b/drivers/clk/sunxi-ng/ccu-sun20i-d1.c
+@@ -1394,6 +1394,7 @@ static const struct of_device_id sun20i_d1_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun20i-d1-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun20i_d1_ccu_ids);
+ 
+ static struct platform_driver sun20i_d1_ccu_driver = {
+ 	.probe	= sun20i_d1_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+index 451ebb7c99a3f4..14f5c3da652b0b 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
++++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+@@ -1481,6 +1481,7 @@ static const struct of_device_id sun4i_a10_ccu_ids[] = {
+ 	},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun4i_a10_ccu_ids);
+ 
+ static struct platform_driver sun4i_a10_ccu_driver = {
+ 	.probe	= sun4i_a10_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+index fddd6c877cecc4..3b983bb59bd94e 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+@@ -202,6 +202,7 @@ static const struct of_device_id sun50i_a100_r_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun50i-a100-r-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun50i_a100_r_ccu_ids);
+ 
+ static struct platform_driver sun50i_a100_r_ccu_driver = {
+ 	.probe	= sun50i_a100_r_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a100.c b/drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+index 5f93b5526e13d6..38aa6e5f298e94 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a100.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+@@ -1264,6 +1264,7 @@ static const struct of_device_id sun50i_a100_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun50i-a100-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun50i_a100_ccu_ids);
+ 
+ static struct platform_driver sun50i_a100_ccu_driver = {
+ 	.probe	= sun50i_a100_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index df679dada792a8..56c629186becf6 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -980,6 +980,7 @@ static const struct of_device_id sun50i_a64_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun50i-a64-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun50i_a64_ccu_ids);
+ 
+ static struct platform_driver sun50i_a64_ccu_driver = {
+ 	.probe	= sun50i_a64_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 02b28cfc5525eb..e2dc29fa99e70d 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -244,6 +244,7 @@ static const struct of_device_id sun50i_h6_r_ccu_ids[] = {
+ 	},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun50i_h6_r_ccu_ids);
+ 
+ static struct platform_driver sun50i_h6_r_ccu_driver = {
+ 	.probe	= sun50i_h6_r_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+index 42568c6161814d..fa483bc2437a09 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+@@ -1259,6 +1259,7 @@ static const struct of_device_id sun50i_h6_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun50i-h6-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun50i_h6_ccu_ids);
+ 
+ static struct platform_driver sun50i_h6_ccu_driver = {
+ 	.probe	= sun50i_h6_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h616.c b/drivers/clk/sunxi-ng/ccu-sun50i-h616.c
+index 21e918582aa564..45aae1ae517846 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h616.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h616.c
+@@ -1154,6 +1154,7 @@ static const struct of_device_id sun50i_h616_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun50i-h616-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun50i_h616_ccu_ids);
+ 
+ static struct platform_driver sun50i_h616_ccu_driver = {
+ 	.probe	= sun50i_h616_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+index 0762deffb33caf..8cb8cbbdbafbb9 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
++++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+@@ -1271,6 +1271,7 @@ static const struct of_device_id sun6i_a31_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun6i-a31-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun6i_a31_ccu_ids);
+ 
+ static struct platform_driver sun6i_a31_ccu_driver = {
+ 	.probe	= sun6i_a31_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-rtc.c b/drivers/clk/sunxi-ng/ccu-sun6i-rtc.c
+index fdc8ccc586c994..5a98c4e9e667db 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun6i-rtc.c
++++ b/drivers/clk/sunxi-ng/ccu-sun6i-rtc.c
+@@ -336,6 +336,7 @@ static const struct of_device_id sun6i_rtc_ccu_match[] = {
+ 	},
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, sun6i_rtc_ccu_match);
+ 
+ int sun6i_rtc_ccu_probe(struct device *dev, void __iomem *reg)
+ {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+index e80cc3864e4409..e748ad612b8ffd 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+@@ -751,6 +751,7 @@ static const struct of_device_id sun8i_a23_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-a23-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_a23_ccu_ids);
+ 
+ static struct platform_driver sun8i_a23_ccu_driver = {
+ 	.probe	= sun8i_a23_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
+index d12878a1ba9e95..8a27a1777600dc 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
+@@ -823,6 +823,7 @@ static const struct of_device_id sun8i_a33_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-a33-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_a33_ccu_ids);
+ 
+ static struct platform_driver sun8i_a33_ccu_driver = {
+ 	.probe	= sun8i_a33_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+index 76cbd9e9e89f68..93eca47935cfcb 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+@@ -911,6 +911,7 @@ static const struct of_device_id sun8i_a83t_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-a83t-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_a83t_ccu_ids);
+ 
+ static struct platform_driver sun8i_a83t_ccu_driver = {
+ 	.probe	= sun8i_a83t_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+index 6a043a0a9dd65d..b0b8dba239aecb 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+@@ -337,6 +337,7 @@ static const struct of_device_id sunxi_de2_clk_ids[] = {
+ 	},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sunxi_de2_clk_ids);
+ 
+ static struct platform_driver sunxi_de2_clk_driver = {
+ 	.probe	= sunxi_de2_clk_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index 74274c17efb3e8..ca5739fa04f70c 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -1082,6 +1082,7 @@ static const struct of_device_id sun8i_h3_ccu_ids[] = {
+ 	},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_h3_ccu_ids);
+ 
+ static struct platform_driver sun8i_h3_ccu_driver = {
+ 	.probe	= sun8i_h3_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+index 4890a976b1a020..bac7e737db98ce 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+@@ -262,6 +262,7 @@ static const struct of_device_id sun8i_r_ccu_ids[] = {
+ 	},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_r_ccu_ids);
+ 
+ static struct platform_driver sun8i_r_ccu_driver = {
+ 	.probe	= sun8i_r_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+index 31eca0d3bc1e7e..3774b293e74c1d 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+@@ -1363,6 +1363,7 @@ static const struct of_device_id sun8i_r40_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-r40-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_r40_ccu_ids);
+ 
+ static struct platform_driver sun8i_r40_ccu_driver = {
+ 	.probe	= sun8i_r40_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index f3ce8664b2883b..994258a3ad2e24 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -768,6 +768,7 @@ static const struct of_device_id sun8i_v3s_ccu_ids[] = {
+ 	},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun8i_v3s_ccu_ids);
+ 
+ static struct platform_driver sun8i_v3s_ccu_driver = {
+ 	.probe	= sun8i_v3s_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
+index 1d8b1ae1619df8..ae7939d3f502b5 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
++++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
+@@ -254,6 +254,7 @@ static const struct of_device_id sun9i_a80_de_clk_ids[] = {
+ 	{ .compatible = "allwinner,sun9i-a80-de-clks" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun9i_a80_de_clk_ids);
+ 
+ static struct platform_driver sun9i_a80_de_clk_driver = {
+ 	.probe	= sun9i_a80_de_clk_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
+index a0fb0da8f3563f..bfa2ff9d52a471 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
++++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
+@@ -127,6 +127,7 @@ static const struct of_device_id sun9i_a80_usb_clk_ids[] = {
+ 	{ .compatible = "allwinner,sun9i-a80-usb-clks" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun9i_a80_usb_clk_ids);
+ 
+ static struct platform_driver sun9i_a80_usb_clk_driver = {
+ 	.probe	= sun9i_a80_usb_clk_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+index 730fd8e280146d..c05805e4ad22e5 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
++++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+@@ -1236,6 +1236,7 @@ static const struct of_device_id sun9i_a80_ccu_ids[] = {
+ 	{ .compatible = "allwinner,sun9i-a80-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, sun9i_a80_ccu_ids);
+ 
+ static struct platform_driver sun9i_a80_ccu_driver = {
+ 	.probe	= sun9i_a80_ccu_probe,
+diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+index 0d5b60b123b76d..76d3d070b2a7bf 100644
+--- a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
++++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+@@ -565,6 +565,7 @@ static const struct of_device_id suniv_f1c100s_ccu_ids[] = {
+ 	{ .compatible = "allwinner,suniv-f1c100s-ccu" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, suniv_f1c100s_ccu_ids);
+ 
+ static struct platform_driver suniv_f1c100s_ccu_driver = {
+ 	.probe	= suniv_f1c100s_ccu_probe,

@@ -745,3 +745,17 @@ endef
 $(eval $(call KernelPackage,hwmon-adcxx))
 
 
+define KernelPackage/hwmon-ntc-thermistor
+  TITLE:=NTC Thermistor Driver support
+  KCONFIG:=CONFIG_SENSORS_NTC_THERMISTOR
+  FILES:=$(LINUX_DIR)/drivers/hwmon/ntc_thermistor.ko
+  AUTOLOAD:=$(call AutoLoad,60,ntc_thermistor)
+  $(call AddDepends/hwmon, +PACKAGE_kmod-thermal:kmod-thermal)
+endef
+
+define KernelPackage/hwmon-ntc-thermistor/description
+  Kernel module for NTC Thermistor sensors
+endef
+
+$(eval $(call KernelPackage,hwmon-ntc-thermistor))
+

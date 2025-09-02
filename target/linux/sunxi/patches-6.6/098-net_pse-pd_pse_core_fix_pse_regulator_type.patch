@@ -1,0 +1,32 @@
+From 326f442784c27da7ea91907d668bb192f1650f71 Mon Sep 17 00:00:00 2001
+From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+Date: Tue, 23 Apr 2024 11:21:11 +0200
+Subject: [PATCH] net: pse-pd: pse_core: Fix pse regulator type
+
+Clarify PSE regulator as voltage regulator, not current.
+The PSE (Power Sourcing Equipment) regulator is defined as a voltage
+regulator, maintaining fixed voltage while accommodating varying current.
+
+Fixes: d83e13761d5b ("net: pse-pd: Use regulator framework within PSE framework")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Link: https://lore.kernel.org/r/20240423-fix_poe-v3-2-e50f32f5fa59@bootlin.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+ drivers/net/pse-pd/pse_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+index bad29eaa4d0133..795ab264eaf27b 100644
+--- a/drivers/net/pse-pd/pse_core.c
++++ b/drivers/net/pse-pd/pse_core.c
+@@ -294,7 +294,7 @@ devm_pse_pi_regulator_register(struct pse_controller_dev *pcdev,
+ 	 */
+ 	rdesc->id = id;
+ 	rdesc->name = name;
+-	rdesc->type = REGULATOR_CURRENT;
++	rdesc->type = REGULATOR_VOLTAGE;
+ 	rdesc->ops = &pse_pi_ops;
+ 	rdesc->owner = pcdev->owner;
+ 

@@ -260,3 +260,21 @@ define Device/xunlong_orangepi-2
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += xunlong_orangepi-2
+
+define Device/router_t113
+  DEVICE_VENDOR := Router
+  DEVICE_MODEL := T113s3
+  FILESYSTEMS := squashfs
+  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-leds-gpio kmod-gpio-button-hotplug kmod-sun4i-emac kmod-thermal uboot-envtools
+  SOC := sun8i-t113s
+
+  KERNEL = kernel-bin | lzma | fit lzma $$(DTS_DIR)/$$(SUNXI_DTS).dtb
+  KERNEL_IN_UBI := 1
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  MKUBIFS_OPTS := -m $$(PAGESIZE) -e 126KiB -c 4096 -F
+  IMAGES := sysupgrade.bin factory.bin
+  IMAGE/sysupgrade.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | append-metadata
+  IMAGE/factory.bin := append-ubi
+endef
+TARGET_DEVICES += router_t113
