@@ -1,0 +1,19 @@
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,16 @@
++SRCS+= main_auto.c
++SRCS+= linux_compat.c
++SRCS+= linux_i2c.c
++SRCS+= sram_code.c
++SRCS+= tps238x.c
++
++CFLAGS+= -Wall -Os
++CFLAGS+= -I.
++
++OBJS= $(SRCS:.c=.o)
++
++all: ti-poe
++
++ti-poe: $(OBJS)
++	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBS)
++

@@ -1,0 +1,591 @@
+--- a/arch/arm/boot/dts/allwinner/sun8i-t113s-t113.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-t113.dts
+@@ -60,27 +60,70 @@
+             linux,default-trigger = "heartbeat";
+         };
+ 
+-        led-1 {
+-            gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+-            default-state = "off";
+-        };
+-
+-        led-2 {
+-            gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; /* PB5 */
+-            default-state = "off";
+-        };
+-
+-        led-3 {
+-            gpios = <&pio 1 6 GPIO_ACTIVE_HIGH>; /* PB6 */
+-            default-state = "off";
+-        };
++//        led-1 {
++//            gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
++//            default-state = "off";
++//        };
++//
++//        led-2 {
++//            gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; /* PB5 */
++//            default-state = "off";
++//        };
++//
++//        led-3 {
++//            gpios = <&pio 1 6 GPIO_ACTIVE_HIGH>; /* PB6 */
++//            default-state = "off";
++//        };
++//
++//        led-4 {
++//            gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB7 */
++//            default-state = "off";
++//        };
+ 
+-        led-4 {
+-            gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB7 */
+-            default-state = "off";
+-        };
+     };
+ 
++    gpio-export {
++      compatible = "gpio-export";
++
++      gpio_0 {
++        gpio-export,name = "PB4";
++        gpio-export,output = <1>;
++        gpio-export,direction_may_change = <1>;
++        gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
++      };
++      gpio_1 {
++        gpio-export,name = "PB5";
++        gpio-export,output = <1>;
++        gpio-export,direction_may_change = <1>;
++        gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; /* PB5 */
++      };
++      gpio_2 {
++        gpio-export,name = "PB6";
++        gpio-export,output = <0>;
++        gpio-export,direction_may_change = <1>;
++        gpios = <&pio 1 6 GPIO_ACTIVE_HIGH>; /* PB6 */
++      };
++      gpio_3 {
++        gpio-export,name = "PB7";
++        gpio-export,output = <0>;
++        gpio-export,direction_may_change = <1>;
++        gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB7 */
++      };
++
++      gpio_4 {
++        gpio-export,name = "sfp0_det";
++        gpio-export,output = <1>;
++        gpio-export,direction_may_change = <0>;
++        gpios = <&pio 5 1 GPIO_ACTIVE_HIGH>; /* PF1 */
++      };
++      gpio_5 {
++        gpio-export,name = "sfp1_det";
++        gpio-export,output = <1>;
++        gpio-export,direction_may_change = <0>;
++        gpios = <&pio 5 0 GPIO_ACTIVE_HIGH>; /* PF0 */
++      };
++	  };
++
+     soc {
+       pwm: pwm@2000c00 {
+           compatible = "allwinner,sun20i-d1-pwm";
+@@ -171,12 +213,61 @@
+       };
+     };
+ 
++    sfp_0: sfp-0 {
++      // pinctrl-names = "default";
++      // pinctrl-0 = <&cpm_sfp_1g_pins &cps_sfp_1g_pins>;
++      compatible = "sff,sfp";
++      i2c-bus = <&i2c3>;
++      //los-gpios = <&pio 46 GPIO_ACTIVE_HIGH>;
++      maximum-power-milliwatt = <3000>;
++      mod-def0-gpios = <&pio 4 9 GPIO_ACTIVE_LOW>; //PE9
++      //tx-disable-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
++      tx-fault-gpios = <&pio 4 8 GPIO_ACTIVE_HIGH>;//PE8
++      //rate-select0-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
++      //rate-select1-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
++      sfp-supply = <&reg_3v3_n>;
++      status = "okay";
++    };
++
++    sfp_1: sfp-1 {
++      // pinctrl-names = "default";
++      // pinctrl-0 = <&cpm_sfp_1g_pins &cps_sfp_1g_pins>;
++      compatible = "sff,sfp";
++      i2c-bus = <&i2c2>;
++      maximum-power-milliwatt = <3000>;
++      mod-def0-gpios = <&pio 4 11 GPIO_ACTIVE_LOW>; //PE11
++      //los-gpios = <&pio 31 GPIO_ACTIVE_HIGH>;
++      tx-fault-gpios = <&pio 4 10 GPIO_ACTIVE_HIGH>;//PE10
++      //tx-disable-gpios = <&pio 15 GPIO_ACTIVE_HIGH>;
++      //rate-select0-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
++      //rate-select1-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
++      sfp-supply = <&reg_3v3_n>;
++      status = "okay";
++    };
++
++    vpwr: regulator-48v {
++      compatible = "regulator-fixed";
++      regulator-name = "vcc-48v";
++      regulator-min-microvolt = <48000000>;
++      regulator-max-microvolt = <48000000>;
++      regulator-always-on;
++    };
++
++    reg_3v3_n: regulator-3v3-n {
++      compatible = "regulator-fixed";
++      regulator-name = "vcc-3v3-n";
++      regulator-min-microvolt = <3300000>;
++      regulator-max-microvolt = <3300000>;
++      vin-supply = <&vpwr>;
++    };
++
+     reg_vcc5v: regulator-5v {
+       compatible = "regulator-fixed";
+       regulator-name = "vcc-5v";
+       regulator-min-microvolt = <5000000>;
+       regulator-max-microvolt = <5000000>;
+       regulator-always-on;
++      vin-supply = <&vpwr>;
+     };
+ 
+     reg_3v3: regulator-3v3 {
+@@ -244,9 +335,20 @@
+   pinctrl-0 = <&i2c1_pe01_pin>;
+   status = "okay";
+ 
+-  ethernet-pse@22 {
+-    compatible = "ti,tps23881";
++  // tps23880@22 {
++  //     compatible = "ti,tps23861";
++  //     reg = <0x22>;
++  //     shunt-resistor-micro-ohms = <255000>;
++  // };
++
++  tps23880_pse: ethernet-pse@22 {
++    compatible = "ti,tps2388x";
+     reg = <0x22>;
++    interrupt-parent = <&pio>;
++    interrupts = <4 2 IRQ_TYPE_LEVEL_LOW>; /* PE2 = INT_PoE */
++    reset-gpios = <&pio 4 3 GPIO_ACTIVE_LOW>; /* PE3 = RST_PoE */
++
++    status = "okay";
+ 
+     channels {
+       #address-cells = <1>;
+@@ -285,40 +387,44 @@
+       };
+     };
+ 
+-    pse_pis {
++    pse_pis: pse-pis {
+       #address-cells = <1>;
+       #size-cells = <0>;
+ 
+-      pse_pi0: pse_pi@0 {
++      pse_pi0: pse-pi@0 {
+         reg = <0>;
+-        #pse-cells = <0>;
++        pairsets = <&phys0>, <&phys1>;
+         pairset-names = "alternative-a", "alternative-b";
+         polarity-supported = "MDI", "MDI-X", "X", "S";
+-        pairsets = <&phys0>, <&phys1>;
++        vpwr-supply = <&vpwr>;
++        #pse-cells = <0>;
+       };
+ 
+-      pse_pi1: pse_pi@1 {
++      pse_pi1: pse-pi@1 {
+         reg = <1>;
+-        #pse-cells = <0>;
++        pairsets = <&phys2>, <&phys3>;
+         pairset-names = "alternative-a", "alternative-b";
+         polarity-supported = "MDI", "MDI-X", "X", "S";
+-        pairsets = <&phys2>, <&phys3>;
++        vpwr-supply = <&vpwr>;
++        #pse-cells = <0>;
+       };
+ 
+-      pse_pi2: pse_pi@2 {
++      pse_pi2: pse-pi@2 {
+         reg = <2>;
+-        #pse-cells = <0>;
++        pairsets = <&phys4>, <&phys5>;
+         pairset-names = "alternative-a", "alternative-b";
+         polarity-supported = "MDI", "MDI-X", "X", "S";
+-        pairsets = <&phys4>, <&phys5>;
++        vpwr-supply = <&vpwr>;
++        #pse-cells = <0>;
+       };
+ 
+-      pse_pi3: pse_pi@3 {
++      pse_pi3: pse-pi@3 {
+         reg = <3>;
+-        #pse-cells = <0>;
++        pairsets = <&phys6>, <&phys7>;
+         pairset-names = "alternative-a", "alternative-b";
+         polarity-supported = "MDI", "MDI-X", "X", "S";
+-        pairsets = <&phys6>, <&phys7>;
++        vpwr-supply = <&vpwr>;
++        #pse-cells = <0>;
+       };
+     };
+   };
+@@ -344,7 +450,8 @@
+   vcc-pf-supply = <&reg_3v3>;
+   vcc-pg-supply = <&reg_3v3>;
+ 
+-  gpio-line-names = 
++  // gpio-reserved-ranges = <0 34>, <40 25>;
++  gpio-line-names =
+     "","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","", //PA? 1-31
+     "","",         //PB0-PB1? 32-33
+     "PB2 - USART4",//34
+@@ -359,8 +466,8 @@
+     "PC3 - CS",    //67
+     "PC4 - MOSI",  //68
+     "PC5 - MISO",  //69
+-    "PC6",         //70
+-    "PC7",         //71
++    "PC6 - WP",    //70
++    "PC7 - HOLD",  //71
+     "","","","","","","","","","","","","","","","","","","","","","","","", //72-95
+     "PD0",         //96
+     "PD1",         //97
+@@ -381,67 +488,77 @@
+     "PD16",        //112
+     "PD17",        //113
+     "PD18",        //114
+-    "PD19",        //115
++    "PD19- FAN",   //115
+     "PD20",        //116
+     "PD21",        //117
+     "PD22",        //119
+     "","","","","","","","","", //120-128
+     "PE0 - I2C1",  //129
+     "PE1 - I2C1",  //130
+-    "PE2",         //131
+-    "PE3",         //132
++    "PE2 - POE_INT",//131
++    "PE3 - POE_RST",//132
+     "PE4 - I2C2",  //133
+     "PE5 - I2C2",  //134
+     "PE6 - I2C3",  //135
+     "PE7 - I2C3",  //136
+-    "PE8",         //137
+-    "PE9",         //138
+-    "PE10",        //139
+-    "PE11",        //140
+-    "PE12",        //141
+-    "PE13",        //142
++    "PE8 - SFP1_FLT",//137
++    "PE9 - FX1_DET",//138
++    "PE10- SFP2_FLT",//139
++    "PE11- FX2_DET",//140
++    "PE12- BUTTON",//141
++    "PE13- OSS",   //142
+     "","","","","","","","","","","","","","","","","","", //143-159
+-    "PF0",         //160
+-    "PF1",         //161
++    "PF0 - SFP2_DET",//160
++    "PF1 - SFP1_DET",//161
+     "PF2 - USART0",//162
+     "PF3 - led-0", //163
+     "PF4 - USART0",//164
+-    "PF5",         //165
+-    "PF6",         //166
++    "PF5 - SW_RST",//165
++    "PF6 - SW_INT",//166
+     "","","","","","","","","","","","","","","","","","","","","","","","","","", //167-193
+-    "PG0",         //194
+-    "PG1",         //195
+-    "PG2",         //196
+-    "PG3",         //197
+-    "PG4",         //198
+-    "PG5",         //199
+-    "PG6",         //200
+-    "PG7",         //201
+-    "PG8",         //202
+-    "PG9",         //203
+-    "PG10",        //204
+-    "PG11",        //205
+-    "PG12",        //206
+-    "PG13",        //207
+-    "PG14",        //208
+-    "PG15"         //209
++    "PG0 - RGMII_RXCTL", //194
++    "PG1 - RGMII_RXD[0]",//195
++    "PG2 - RGMII_RXD[1]",//196
++    "PG3 - RGMII_TXCK",  //197
++    "PG4 - RGMII_TXD[0]",//198
++    "PG5 - RGMII_TXD[1]",//199
++    "PG6 - RGMII_TXD[2]",//200
++    "PG7 - RGMII_TXD[3]",//201
++    "PG8 - RGMII_RXD[2]",//202
++    "PG9 - RGMII_RXD[3]",//203
++    "PG10- RGMII_RXCK",  //204
++    "PG11- EPHY_25M",    //205
++    "PG12- RGMII_TXCTL", //206
++    "PG13- RGMII_CLKIN", //207
++    "PG14- MDC",         //208
++    "PG15- MDIO"         //209
+     ;
+ 
+   spi0_cs_pin: spi0-cs-pin {
+-      pins = "PC3";
+-      function = "spi0";
++    pins = "PC3";
++    function = "spi0";
++
++    drive-strength = <40>;
+   };
+ 
+   spi0_pc67_pin: spi0-pc67-pin {
+-      pins = "PC6", "PC7";
+-      function = "spi0";
++    pins = "PC6", "PC7";
++    function = "spi0";
++
++    drive-strength = <40>;
+   };
+ 
+   rgmii_pg_pins: rgmii-pg-pins {
+     pins = "PG0", "PG1", "PG2", "PG3", "PG4",
+            "PG5", "PG6", "PG7", "PG8", "PG9",
+-           "PG10", "PG11", "PG12", "PG13",
+-           "PG14", "PG15";
++           "PG10", "PG11", "PG12", "PG13";
++    function = "emac";
++
++    //drive-strength = <40>;
++  };
++
++  mdio_pg_pins: mdio-pg-pins {
++    pins = "PG14", "PG15";
+     function = "emac";
+   };
+ 
+@@ -475,6 +592,30 @@
+     pins = "PE6", "PE7";
+     function = "i2c3";
+   };
++
++  swint_pins: swint-pins {
++    pins = "PF6";
++    function = "gpio_in";
++  };
++
++  swrst_pins: swrst-pins {
++    pins = "PF5";
++    function = "gpio_out";
++  };
++
++  // sfp0_det_pins: sfp0-det_pins {
++  //   pins = "PF1";
++  //   function = "gpio_out";
++  // };
++
++  // sfp1_det_pins: sfp1-det_pins {
++  //   pins = "PF0";
++  //   function = "gpio_out";
++  // };
++};
++
++&spi0_pins {
++  drive-strength = <40>;
+ };
+ 
+ &spi0  {
+@@ -489,6 +630,7 @@
+         spi-max-frequency = <100000000>;
+         spi-tx-bus-width = <4>;
+         spi-rx-bus-width = <4>;
++        flash-supply = <&reg_3v3>;
+         status = "okay";
+         partitions {
+             compatible = "fixed-partitions";
+@@ -526,80 +668,158 @@
+ };
+ 
+ &mdio {
+-  interrupt-parent = <&pio>;
+-  interrupts = <5 6 IRQ_TYPE_LEVEL_LOW>; /* PF6 = INT_N */
+-  interrupt-controller;
+-  #interrupt-cells = <2>;
++//  pinctrl-names = "default";
++//  pinctrl-0 = <&mdio_pg_pins>;
+ 
+   switch0: ethernet-switch@0 {
+-    compatible = "marvell,mv88e6097";
+-    reg = <0>;
+-    reset-gpios = <&pio 5 5 GPIO_ACTIVE_LOW>; /* PF5 = RST_N */
++//    status = "disabled";
++
++    compatible = "marvell,mv88e6085";
++    pinctrl-names = "default";
++    pinctrl-0 = <&swint_pins>;
++    //reset-gpios = <&pio 5 5 GPIO_ACTIVE_LOW>; /* PF5 = RST_N */
++    //reset-names = "switch";
++    //reset-assert-us = <10000>;
++    //reset-deassert-us = <2000>;
++
++
++    interrupt-parent = <&pio>;
++    interrupts = <5 6 IRQ_TYPE_LEVEL_LOW>; /* PF6 = INT_N */
++    interrupt-controller;
++    #interrupt-cells = <2>;
+ 
+-    ports {
++    reg = <0x0>;
++    dsa,member = <0 0>; /*    reset-gpios = <&pio 5 5 GPIO_ACTIVE_LOW>; PF5 = RST_N */
++
++    switch-supply = <&reg_3v3_n>;
++
++    switch0ports: ethernet-ports {
+       #address-cells = <1>;
+       #size-cells = <0>;
+ 
+-      port@0 {
++      poe1: ethernet-port@0 {
+           reg = <0>;
+           label = "lan0";
++          phy-handle = <&switch0phy0>;
+       };
+ 
+-      port@1{
++      poe2: ethernet-port@1{
+           reg = <1>;
+           label = "lan1";
++          phy-handle = <&switch0phy1>;
+       };
+ 
+-      port@2 {
++      poe3: ethernet-port@2 {
+           reg = <2>;
+           label = "lan2";
++          phy-handle = <&switch0phy2>;
+       };
+ 
+-      port@3 {
++      poe4: ethernet-port@3 {
+           reg = <3>;
+           label = "lan3";
++          phy-handle = <&switch0phy3>;
+       };
+ 
+-      port@7 {
++      ethernet-port@7 {
+           reg = <7>;
+           label = "lan4";
++          phy-handle = <&switch0phy7>;
+       };
+ 
+-      port@8 {
++      sfp0: ethernet-port@8 {
+           reg = <8>;
+           label = "sfp0";
++          phy-mode = "1000base-x";
++          sfp = <&sfp_0>;
++//          managed = "in-band-status";
++          fixed-link {
++            speed = <1000>;
++            full-duplex;
++          };
+       };
+ 
+-      port@9 {
++      sfp1: ethernet-port@9 {
+           reg = <9>;
+           label = "sfp1";
++          phy-mode = "1000base-x";
++          sfp = <&sfp_1>;
++//          managed = "in-band-status";
++          fixed-link {
++            speed = <1000>;
++            full-duplex;
++          };
+       };
+ 
+-      port@10 { 
++      switch0cpu: ethernet-port@10 {
+           reg = <10>;
+           label = "cpu";
+           ethernet = <&emac>;
+-          phy-mode = "rgmii-id";
++          phy-mode = "rgmii-txid";  //rgmii-txid
++//          managed = "in-band-status";
+           fixed-link {
+             speed = <1000>;
+             full-duplex;
+           };
+       };
+     };
++
++    switch0mdio: mdio {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      switch0phy0: ethernet-phy@0 {
++        reg = <0x0>;
++        interrupt-parent = <&switch0>;
++        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++        pses = <&pse_pi0>;
++      };
++
++      switch0phy1: ethernet-phy@1 {
++        reg = <0x1>;
++        interrupt-parent = <&switch0>;
++        interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
++        pses = <&pse_pi1>;
++      };
++
++      switch0phy2: ethernet-phy@2 {
++        reg = <0x2>;
++        interrupt-parent = <&switch0>;
++        interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++        pses = <&pse_pi2>;
++      };
++
++      switch0phy3: ethernet-phy@3 {
++        reg = <0x3>;
++        interrupt-parent = <&switch0>;
++        interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
++        pses = <&pse_pi3>;
++      };
++
++      switch0phy7: ethernet-phy@7 {
++        reg = <0x7>;
++        interrupt-parent = <&switch0>;
++        interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
+   };
+ };
+ 
+ &emac {
+   pinctrl-names = "default";
+-  pinctrl-0 = <&rgmii_pg_pins>;
++  pinctrl-0 = <&rgmii_pg_pins>, <&mdio_pg_pins>; //<&swrst_pins>,
+   reset-gpios = <&pio 5 5 GPIO_ACTIVE_LOW>; /* PF5 = RST_N */
+-  phy-mode = "rgmii-id";
++  phy-mode = "rgmii";
+   phy-handle = <&switch0>;
+-  phy-supply = <&reg_3v3>;
++  phy-supply = <&reg_3v3_n>;
+   clocks = <&ccu CLK_BUS_EMAC>, <&ccu CLK_EMAC_25M>;
+   clock-names = "stmmaceth", "phy";
+-  status = "ok";
++  status = "okay";
+ 
++  allwinner,rx-delay-ps = <400>;
++  allwinner,tx-delay-ps = <400>;
++
++//  managed = "in-band-status";
+   fixed-link {
+     speed = <1000>;
+     full-duplex;
+@@ -707,4 +927,3 @@
+     reg = <0>;
+   };
+ };

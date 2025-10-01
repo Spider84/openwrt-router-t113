@@ -1,0 +1,11 @@
+--- a/main_auto.c
++++ b/main_auto.c
+@@ -48,7 +48,7 @@
+                }
+        }
+
+-       linux_i2c_open_dev("/dev/i2c-0");
++       linux_i2c_open_dev("/dev/i2c-1");
+
+        sysPortNum1 = tps_RegisterPort (tps2388x_i2cAddList[0], TPS238X_PORT_1);
+        sysPortNum2 = tps_RegisterPort (tps2388x_i2cAddList[0], TPS238X_PORT_2);

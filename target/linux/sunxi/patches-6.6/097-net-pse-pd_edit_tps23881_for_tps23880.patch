@@ -1,0 +1,93 @@
+--- a/drivers/net/pse-pd/tps23881.c
++++ b/drivers/net/pse-pd/tps23881.c
+@@ -308,7 +308,7 @@
+ 		return ret;
+ 
+ 	if (!tps23881_is_chan_free(port_matrix, ret)) {
+-		pr_err("tps23881: channel %d already used\n", ret);
++		pr_err("tps2388x: channel %d already used\n", ret);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -323,12 +323,12 @@
+ 		return ret;
+ 
+ 	if (!tps23881_is_chan_free(port_matrix, ret)) {
+-		pr_err("tps23881: channel %d already used\n", ret);
++		pr_err("tps2388x: channel %d already used\n", ret);
+ 		return -ENODEV;
+ 	}
+ 
+ 	if (port_matrix[pi_id].hw_chan[0] / 4 != ret / 4) {
+-		pr_err("tps23881: 4-pair PSE can only be set within the same 4 ports group");
++		pr_err("tps2388x: 4-pair PSE can only be set within the same 4 ports group");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -434,12 +434,12 @@
+ 	while (cnt_4ch_grp1 < 4) {
+ 		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
+ 		if (ret < 0) {
+-			pr_err("tps23881: port matrix issue, no chan available\n");
++			pr_err("tps2388x: port matrix issue, no chan available\n");
+ 			return ret;
+ 		}
+ 
+ 		if (port_cnt >= TPS23881_MAX_CHANS) {
+-			pr_err("tps23881: wrong number of channels\n");
++			pr_err("tps2388x: wrong number of channels\n");
+ 			return -ENODEV;
+ 		}
+ 		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp1;
+@@ -454,12 +454,12 @@
+ 	while (cnt_4ch_grp2 < 8) {
+ 		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
+ 		if (ret < 0) {
+-			pr_err("tps23881: port matrix issue, no chan available\n");
++			pr_err("tps2388x: port matrix issue, no chan available\n");
+ 			return -ENODEV;
+ 		}
+ 
+ 		if (port_cnt >= TPS23881_MAX_CHANS) {
+-			pr_err("tps23881: wrong number of channels\n");
++			pr_err("tps2388x: wrong number of channels\n");
+ 			return -ENODEV;
+ 		}
+ 		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp2;
+@@ -750,7 +750,9 @@
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (ret != 0x22) {
++	dev_info(&client->dev, "Device ID 0x%02x\n", ret);
++
++	if ((ret & 0xF0) != 0x20) {
+ 		dev_err(dev, "Wrong device ID\n");
+ 		return -ENXIO;
+ 	}
+@@ -794,12 +796,16 @@
+ }
+ 
+ static const struct i2c_device_id tps23881_id[] = {
++	{ "tps2388x", 0 },
++	{ "tps23880", 0 },
+ 	{ "tps23881", 0 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(i2c, tps23881_id);
+ 
+ static const struct of_device_id tps23881_of_match[] = {
++	{ .compatible = "ti,tps2388x", },
++	{ .compatible = "ti,tps23880", },
+ 	{ .compatible = "ti,tps23881", },
+ 	{ },
+ };
+@@ -809,7 +817,7 @@
+ 	.probe		= tps23881_i2c_probe,
+ 	.id_table	= tps23881_id,
+ 	.driver		= {
+-		.name		= "tps23881",
++		.name		= "tps2388x",
+ 		.of_match_table = tps23881_of_match,
+ 	},
+ };

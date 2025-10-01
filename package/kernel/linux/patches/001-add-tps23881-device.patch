@@ -1,0 +1,22 @@
+diff --git a/package/kernel/linux/modules/netdevices.mk b/package/kernel/linux/modules/netdevices.mk
+index c60a947978..d257d33270 100644
+--- a/package/kernel/linux/modules/netdevices.mk
++++ b/package/kernel/linux/modules/netdevices.mk
+@@ -2042,3 +2042,17 @@ define KernelPackage/enc28j60/description
+ endef
+
+ $(eval $(call KernelPackage,enc28j60))
++
++define KernelPackage/tps23881
++  SUBMENU:=$(NETWORK_DEVICES_MENU)
++  TITLE:=TI TPS23881 Power Ethernet driver
++  KCONFIG:=CONFIG_PSE_TPS23881
++  FILES:=$(LINUX_DIR)/drivers/net/pse-pd/tps23881.ko
++  AUTOLOAD:=$(call AutoLoad,18,tps23881)
++endef
++
++define KernelPackage/tps23881/description
++  Kernel module for TI TPS23881 Power Ethernet controller
++endef
++
++$(eval $(call KernelPackage,tps23881))
